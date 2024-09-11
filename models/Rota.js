@@ -10,7 +10,7 @@ const rotaSchema = new mongoose.Schema(
     },
     weekStart: {
       type: Date,
-      required: true, // Start date of the rota week
+      required: false, // Start date of the rota week
     },
     parsedData: [
       {

@@ -1,18 +1,23 @@
-// components/RotaUploadForm.js
+// // // components/RotaUploadForm.js
 
 import { useState } from 'react';
 
 export default function RotaUploadForm({ onSubmit, isSubmitting }) {
   const [file, setFile] = useState(null);
   const [name, setName] = useState('');
+  const [weekStart, setWeekStart] = useState(''); // State for weekStart
 
   function handleFileChange(event) {
     setFile(event.target.files[0]);
   }
 
+  function handleWeekStartChange(event) {
+    setWeekStart(event.target.value); // Update weekStart state
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
-    if (!file || !name) {
+    if (!file || !name || !weekStart) {
       // Handle validation
       return;
     }
@@ -20,6 +25,7 @@ export default function RotaUploadForm({ onSubmit, isSubmitting }) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('name', name);
+    formData.append('weekStart', weekStart); // Include weekStart in formData
 
     onSubmit(formData);
   }
@@ -41,6 +47,12 @@ export default function RotaUploadForm({ onSubmit, isSubmitting }) {
         accept='.xlsx'
         onChange={handleFileChange}
         className='border border-gray-300 rounded-lg p-2 w-full md:w-2/3'
+      />
+      <input
+        type='date'
+        value={weekStart}
+        onChange={handleWeekStartChange} // Update weekStart state on change
+        className='border border-gray-300 rounded-lg p-2 w-full md:w-1/3'
       />
       <button
         type='submit'

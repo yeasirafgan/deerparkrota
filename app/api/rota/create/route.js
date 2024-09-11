@@ -10,14 +10,16 @@ export async function POST(request) {
     const formData = await request.formData();
     const file = formData.get('file');
     const name = formData.get('name'); // Get rota name from form data
+    const weekStart = formData.get('weekStart'); // Get weekStart from form data
 
     console.log('File received:', file);
-    console.log('File name:', file.name);
+    console.log('File name:', file?.name);
     console.log('Rota name:', name);
+    console.log('Week start date:', weekStart);
 
-    if (!file || !name) {
+    if (!file || !name || !weekStart) {
       return NextResponse.json(
-        { error: 'No file or name provided' },
+        { error: 'File, name, or week start date not provided' },
         { status: 400 }
       );
     }
@@ -27,7 +29,6 @@ export async function POST(request) {
 
     // Filter out empty objects
     jsonData = jsonData.filter((item) => {
-      // Check if the staff or post field contains meaningful data
       return item.staff?.trim() || item.post?.trim();
     });
 
@@ -37,6 +38,7 @@ export async function POST(request) {
     await connectMongo();
     const newRota = new Rota({
       name: name,
+      weekStart: new Date(weekStart), // Store weekStart as Date
       fileData: file.name, // Store file name or path
       parsedData: jsonData,
     });
